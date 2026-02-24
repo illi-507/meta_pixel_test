@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Meta Pixel Test</title>
+    <script>
+      // ======= Meta Pixel 初始化 =======
+      (function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod
+            ? n.callMethod.apply(n, arguments)
+            : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(
+        window,
+        document,
+        "script",
+        "https://connect.facebook.net/en_US/fbevents.js",
+      );
+
+      var PIXEL_ID = "1678745019414366";
+      fbq("init", PIXEL_ID);
+
+      // ======= Event ID 生成函数 =======
+      function getEventID(event, prefix) {
+        try {
+          if (event && event.id) return String(event.id);
+          return (
+            prefix +
+            "_" +
+            Date.now() +
+            "_" +
+            Math.random().toString(16).slice(2)
+          );
+        } catch (e) {
+          return prefix + "_" + Date.now();
+        }
+      }
+
+      // Page views
+      fbq("track", "PageView");
+
+      // ======= 测试函数：手动触发 AddToCart / Purchase =======
+      function triggerAddToCart() {
+        var eventID = getEventID(null, "atc");
+        fbq(
+          "track",
+          "AddToCart",
+          {
+            content_ids: ["test123"],
+            content_type: "product",
+            value: 5438,
+            currency: "USD",
+          },
+          { eventID: eventID },
+        );
+        alert("AddToCart triggered! EventID: " + eventID);
+      }
+
+      function triggerPurchase() {
+        var eventID = getEventID(null, "pur");
+        fbq(
+          "track",
+          "Purchase",
+          {
+            value: 5438,
+            currency: "USD",
+          },
+          { eventID: eventID },
+        );
+        alert("Purchase triggered! EventID: " + eventID);
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Meta Pixel Test Page</h1>
+    <button onclick="triggerAddToCart()">Trigger AddToCart</button>
+    <button onclick="triggerPurchase()">Trigger Purchase</button>
+  </body>
+</html>
